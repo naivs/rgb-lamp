@@ -3,13 +3,13 @@ local BSSID = "E8-94-F6-5D-06-42"
 local PASSWORD = "pass"
 
 function startup()
-    if file.open("led_rgb_rest.lua") == nil then
-        print("led_rgb_rest.lua deleted or renamed")
+    if file.exists("http.lua") then
+    print("Running")
+        file.close("http.lua")
+        dofile("http.lua")
+        print('dofile("http.lua")')
     else
-        print("Running")
-        file.close("led_rgb_rest.lua")
-        dofile("led_rgb_rest.lua")
-        print('dofile("led_rgb_rest.lua")')
+        print("led_rgb_rest.lua deleted or renamed")
     end
 end
 
