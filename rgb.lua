@@ -3,6 +3,7 @@ function led(r, g, b)
     pwm.setduty(2, g)
     pwm.setduty(3, b)
 end
+
 pwm.setup(1, 1000, 1023)
 pwm.setup(2, 1000, 1023)
 pwm.setup(3, 1000, 1023)

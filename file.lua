@@ -1,3 +1,5 @@
+if file.exists("modes.dat") then init() end
+
 function readPrevMode()
 	if selectedModeNumber > 0 then
 		file.open("modes.dat", "r")
@@ -25,10 +27,34 @@ function readNextMode()
 	file.close()
 end
 
-function writeMode(mode)
+function saveMode(mode)
 	file.open("modes.dat", "a+")
 	file.writeline(mode)
 	file.close()
+end
+
+function removeMode(index)
+	local modes = {}
+	local f = file.open("modes.dat", "w+")
+
+	local ind = 0
+	while line = f.readline() ~= nil do
+		if index ~= ind then
+			modes[ind] = line
+		end
+		ind = ind + 1
+	end
+
+	f.write("")
+	f.close()
+
+	f = file.open("modes.dat", "a+")
+
+	for i = 0, #modes do
+		f.writeline(modes[i])
+	end
+
+	f.close()
 end
 
 function getModes()
@@ -41,4 +67,10 @@ function getModes()
 	end
 	file.close()
 	return modes
+end
+
+function init()
+	file.open("modes.dat", "a+")
+	file.write("")
+	file.close()
 end
