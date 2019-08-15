@@ -1,11 +1,17 @@
-if file.exists("modes.dat") then init() end
+function init()
+	file.open("modes.dat", "w+")
+	file.write("")
+	file.close()
+end
+
+if not file.exists("modes.dat") then init() end
 
 function readPrevMode()
 	if selectedModeNumber > 0 then
 		file.open("modes.dat", "r")
 		local prev = selectedModeNumber - 1
 
-		for i = 0, prev do
+		for i = 1, prev do
 			selectedMode = file.readline()
 		end
 		selectedModeNumber = selectedModeNumber - 1
@@ -17,7 +23,7 @@ function readNextMode()
 	local nxt = selectedModeNumber + 1
 	file.open("modes.dat", "r")
 	local mode
-	for i = 0, nxt do
+	for i = 1, nxt do
 		mode = file.readline()
 		if mode ~= nil then
 			selectedMode = mode
@@ -35,42 +41,46 @@ end
 
 function removeMode(index)
 	local modes = {}
-	local f = file.open("modes.dat", "w+")
+	file.open("modes.dat")
 
-	local ind = 0
-	while line = f.readline() ~= nil do
-		if index ~= ind then
-			modes[ind] = line
+	for i = 1, 100 do
+		local line = file.readline()
+		if line == nil then break
+		else
+			print("removeMode line: " .. line)
+			-- print("index: <" .. index .. ">")
+			-- if tonumber(index) ~= i then
+				modes[i] = line
+			-- end
 		end
-		ind = ind + 1
 	end
+	file.close()
 
-	f.write("")
-	f.close()
+	--file.remove("modes.dat")
 
-	f = file.open("modes.dat", "a+")
+	print("before: " .. #modes)
+	table.remove(modes, index)
+	print("after: " .. #modes)
 
-	for i = 0, #modes do
-		f.writeline(modes[i])
+	file.open("modes.dat", "w+")
+
+	print("removeMode #modes: " .. #modes)
+	for w = 1, #modes do print("in final write w: " .. modes[w])
+		file.write(modes[w])
 	end
-
-	f.close()
+	file.flush()
+	file.close()
 end
 
 function getModes()
 	file.open("modes.dat", "r")
 	local modes = {}
-	for i = 0, 100 do
+	local line
+	for i = 1, 100 do print("getModes ind: " .. i)
 		line = file.readline()
 		if line == nil then break
 		else modes[i] = line end
 	end
 	file.close()
 	return modes
-end
-
-function init()
-	file.open("modes.dat", "a+")
-	file.write("")
-	file.close()
 end

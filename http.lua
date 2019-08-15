@@ -26,9 +26,17 @@ srv:listen(80,function(conn)
 		elseif path == "/save" then
 			print("/save")
 			if vars ~= nil then
-				writeMode(vars)
+				saveMode(vars)
 			end
 			client:send("HTTP/1.1 200 OK")
+        elseif path == "/delete" then
+            print("/delete")
+            if vars ~= nil then
+                local _, _, key, val = string.find(vars, "(%w+)=(%w+)");
+                print("number: " .. val)
+                removeMode(val)
+            end
+            client:send("HTTP/1.1 200 OK")
 		elseif path == "/modes" then
 			print("/modes")
 			local buf = [[ HTTP/1.1 200 OK
@@ -43,11 +51,15 @@ srv:listen(80,function(conn)
 								<div class="row">
 									<ul>
 									]]
+
 			local modes = getModes()
-			print(modes)
-			for i = 0, #modes do                       	
-				buf = buf .. "<li>" .. modes[i] .. "</li>"
-			end
+            if #modes ~= 0 then
+    			print("modes count: " .. #modes)
+    			for i = 1, #modes do
+                    print("index: " .. i)
+    				buf = buf .. "<li>" .. modes[i] .. "</li>"
+    			end
+            end
 			buf = buf .. [[ 	</ul>
 							</div>
 						</div>
