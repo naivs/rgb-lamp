@@ -33,6 +33,20 @@ function readNextMode()
 	file.close()
 end
 
+function getMode(number)
+	file.open("modes.dat", "r")
+
+	local line
+	for i = 1, 100 do
+		line = file.readLine()
+		if line == nil then 
+			break
+		elseif i == number then 
+			return line 
+		end
+	end
+end
+
 function saveMode(mode)
 	file.open("modes.dat", "a+")
 	file.writeline(mode)
@@ -43,20 +57,16 @@ function removeMode(index)
 	local modes = {}
 	file.open("modes.dat")
 
+	local line
 	for i = 1, 100 do
-		local line = file.readline()
+		line = file.readline()
 		if line == nil then break
 		else
 			print("removeMode line: " .. line)
-			-- print("index: <" .. index .. ">")
-			-- if tonumber(index) ~= i then
-				modes[i] = line
-			-- end
+			modes[i] = line
 		end
 	end
 	file.close()
-
-	--file.remove("modes.dat")
 
 	print("before: " .. #modes)
 	table.remove(modes, index)

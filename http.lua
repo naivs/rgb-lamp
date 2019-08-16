@@ -23,28 +23,33 @@ srv:listen(80,function(conn)
 				-- led(1023-_GET.r, 1023-_GET.g,1023-_GET.b)   
 			end
 			client:send("HTTP/1.1 200 OK")
+		elseif path == "/set" then
+			print("/set")
+			if vars ~= nil and vars ~= "" then
+				local _, _, key, val = string.find(vars, "(%w+)=(%w+)")
+				local stringMode = getMode(val)
+				-- activate mode
+			end
 		elseif path == "/save" then
 			print("/save")
-			if vars ~= nil then
+			if vars ~= nil and vars ~= "" then
 				saveMode(vars)
-			end
+			else if activeMode ~= nil then saveMode(activeMode) end
 			client:send("HTTP/1.1 200 OK")
         elseif path == "/delete" then
             print("/delete")
-            if vars ~= nil then
-                local _, _, key, val = string.find(vars, "(%w+)=(%w+)");
+            if vars ~= nil and vars ~= "" then
+                local _, _, key, val = string.find(vars, "(%w+)=(%w+)")
                 print("number: " .. val)
                 removeMode(val)
-            end
+            else removeMode(activeModeNumber) end -- todo: select next available mode
             client:send("HTTP/1.1 200 OK")
 		elseif path == "/modes" then
 			print("/modes")
 			local buf = [[HTTP/1.1 200 OK
 Content-Type: application/json
 
-{ "modes": [
-]]
-
+{"modes":[]]
 			local modes = getModes()
             if #modes ~= 0 then
     			print("modes count: " .. #modes)
@@ -56,12 +61,10 @@ Content-Type: application/json
                     else buf = buf .. "\"," end
     			end
             end
-			buf = buf .. [[]
-} ]]
-
+			buf = buf .. [[]}]]
 			client:send(buf)
 		elseif path == "/picker" then
-			local buf1 = [[ HTTP/1.1 200 OK
+			local buf1 = [[HTTP/1.1 200 OK
 
 				<!DOCTYPE html>
 				<html>
@@ -88,7 +91,6 @@ Content-Type: application/json
 					</body>
 				</html>
 			]]
-	
 			client:send(buf1)
 		end
 		
