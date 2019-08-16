@@ -39,33 +39,25 @@ srv:listen(80,function(conn)
             client:send("HTTP/1.1 200 OK")
 		elseif path == "/modes" then
 			print("/modes")
-			local buf = [[ HTTP/1.1 200 OK
+			local buf = [[HTTP/1.1 200 OK
+Content-Type: application/json
 
-					<!DOCTYPE html>
-					<html>
-						<head>
-							<meta charset="utf-8">
-						</head>
-						<body>
-							<div class="container">
-								<div class="row">
-									<ul>
-									]]
+{ "modes": [
+]]
 
 			local modes = getModes()
             if #modes ~= 0 then
     			print("modes count: " .. #modes)
     			for i = 1, #modes do
                     print("index: " .. i)
-    				buf = buf .. "<li>" .. modes[i] .. "</li>"
+    				buf = buf .. "\"" .. string.sub(modes[i], 1, #modes[i] - 1)
+                    if i == #modes then 
+                        buf = buf .. "\"" 
+                    else buf = buf .. "\"," end
     			end
             end
-			buf = buf .. [[ 	</ul>
-							</div>
-						</div>
-					</body>
-				</html>
-			]]
+			buf = buf .. [[]
+} ]]
 
 			client:send(buf)
 		elseif path == "/picker" then
