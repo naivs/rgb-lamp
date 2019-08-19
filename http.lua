@@ -24,7 +24,7 @@ srv:listen(80,function(conn)
 			print("/save")
 			if vars ~= nil and vars ~= "" then
 				saveMode(vars)
-			else if activeMode ~= nil then saveMode(activeMode) end
+			elseif activeMode ~= nil then saveMode(activeMode) end
 			client:send("HTTP/1.1 200 OK")
         elseif path == "/delete" then
             print("/delete")

@@ -1,13 +1,3 @@
-local inner_r = 1 inner_g = 2 inner_b = 3
-local outer_r = 4 outer_g = 5 outer_b = 6
-local freq = 1000
-
-on()
-
--- current mode
-activeModeNumber = 0
-activeMode = nil
-
 function off()
 	pwm.stop(outer_r)
 	pwm.stop(outer_g)
@@ -93,3 +83,13 @@ end
 function setNumber(modeNumber)
 
 end
+
+inner_r = 1 inner_g = 2 inner_b = 3
+outer_r = 4 outer_g = 5 outer_b = 6
+freq = 1000
+
+on()
+
+-- current mode
+activeModeNumber = 0
+activeMode = nil
