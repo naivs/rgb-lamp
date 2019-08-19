@@ -1,10 +1,27 @@
-function init()
+if not file.exists("modes.dat") then
 	file.open("modes.dat", "w+")
 	file.write("")
 	file.close()
 end
 
-if not file.exists("modes.dat") then init() end
+if not file.exists("last.dat") then
+	file.open("last.dat", "w+")
+	file.write("")
+	file.close()
+end
+
+function saveLastMode(mode)
+	file.open("last.dat", "w+")
+	file.writeline(mode)
+	file.close()
+end
+
+function getLastMode()
+	file.open("last.dat", "r")
+	local lastMode = file.readline()
+	file.close()
+	return lastMode
+end
 
 function readPrevMode()
 	if selectedModeNumber > 0 then

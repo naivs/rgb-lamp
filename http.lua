@@ -7,20 +7,10 @@ srv:listen(80,function(conn)
 			_, _, method, path = string.find(request, "([A-Z]+) (.+) HTTP");
 		end
 
+		
 		if path == "/color" then
-			local _GET = {}
 			if vars ~= nil then
-				for k, v in string.gmatch(vars, "(%w+)=(%w+)&*") do
-					_GET[k] = v
-				end
-			end
-
-			if _GET.r or _GET.g or _GET.b then
-				-- This is for RGB Common Cathodesave
-				led(_GET.r, _GET.g,_GET.b)
-				
-				-- This is for RGB Common Anode
-				-- led(1023-_GET.r, 1023-_GET.g,1023-_GET.b)   
+				setMode(vars)
 			end
 			client:send("HTTP/1.1 200 OK")
 		elseif path == "/set" then
