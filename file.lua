@@ -10,44 +10,32 @@ if not file.exists("last.dat") then
 	file.close()
 end
 
-function saveLastMode(mode)
+function saveLast(index)
 	file.open("last.dat", "w+")
 	file.writeline(mode)
 	file.close()
 end
 
-function getLastMode()
+function getLast()
 	file.open("last.dat", "r")
 	local lastMode = file.readline()
 	file.close()
 	return lastMode
 end
 
-function readPrevMode()
-	if selectedModeNumber > 0 then
-		file.open("modes.dat", "r")
-		local prev = selectedModeNumber - 1
-
-		for i = 1, prev do
-			selectedMode = file.readline()
-		end
-		selectedModeNumber = selectedModeNumber - 1
-		file.close()
+function prev(current)
+	local index, mode
+	if current > 0 then
+		index = current - 1
+		mode = getMode(index)
 	end
+	return index, mode
 end
 
-function readNextMode()
-	local nxt = selectedModeNumber + 1
-	file.open("modes.dat", "r")
-	local mode
-	for i = 1, nxt do
-		mode = file.readline()
-		if mode ~= nil then
-			selectedMode = mode
-			selectedModeNumber = selectedModeNumber + 1
-		end
-	end
-	file.close()
+function next(current)
+	local index = current + 1, mode = getMode(index)
+	if mode == nil then index = index - 1 end
+	return index, mode
 end
 
 function getMode(number)
@@ -58,10 +46,13 @@ function getMode(number)
 		line = file.readLine()
 		if line == nil then 
 			break
-		elseif i == number then 
+		elseif i == number then
+			file.close()
 			return line 
 		end
 	end
+	file.close()
+	return nil
 end
 
 function saveMode(mode)
@@ -97,6 +88,14 @@ function removeMode(index)
 	end
 	file.flush()
 	file.close()
+
+	local lastMode = getLast()
+	if lastMode == index or lastMode > #modes + 1 then
+		lastMode = nil
+	elseif lastMode > index then
+		lastMode = lastMode - 1
+	end
+	saveLast(lastMode)
 end
 
 function getModes()
